@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
 import CopyButton from '@/components/CopyButton'
+import AvatarSelector from './Avatar/AvatarSelector'
 
 interface CreateRoomFormProps {
   roomId: string
@@ -33,8 +34,7 @@ type CreatRoomForm = z.infer<typeof createRoomSchema>
 
 export default function CreateRoomForm({ roomId }: CreateRoomFormProps) {
   const router = useRouter()
-
-  const setUser = useUserStore(state => state.setUser)
+  const { setUser, user: zustandUser } = useUserStore(state => state)
   const setMembers = useMembersStore(state => state.setMembers)
 
   const [isLoading, setIsLoading] = useState(false)
@@ -48,7 +48,8 @@ export default function CreateRoomForm({ roomId }: CreateRoomFormProps) {
 
   function onSubmit({ username }: CreatRoomForm) {
     setIsLoading(true)
-    socket.emit('create-room', { roomId, username })
+    console.log(zustandUser)
+    socket.emit('create-room', { roomId, username, Avatar: zustandUser?.Avatar })
   }
 
   useEffect(() => {
@@ -78,6 +79,9 @@ export default function CreateRoomForm({ roomId }: CreateRoomFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-4'>
+        <div>
+          <AvatarSelector isEditor />
+        </div>
         <FormField
           control={form.control}
           name='username'

@@ -1,23 +1,12 @@
-import ColorPicker from '@/components/ColorPicker'
-import StrokeWidthSlider from '@/components/StrokeWidthSlider'
-import DashGapSlider from '@/components/DashGapSlider'
-import MemberList from '@/components/MemberList'
-import LeaveButton from '@/components/LeaveButton'
+import React from 'react'
+import MemberList from './MemberList'
 
-export default function Sidebar() {
+const SideBar = () => {
   return (
-    <aside className='hidden border-l px-6 py-8 lg:block'>
-      <div className='relative flex h-full w-[12.5rem] flex-col gap-6'>
-        <ColorPicker />
-
-        <StrokeWidthSlider />
-
-        <DashGapSlider />
-
-        <MemberList />
-
-        <LeaveButton />
-      </div>
-    </aside>
+    <div className='hidden flex-[3] border-l px-3 py-4 lg:block'>
+      <MemberList />
+    </div>
   )
 }
+
+export default SideBar

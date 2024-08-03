@@ -3,6 +3,13 @@ import { create } from 'zustand'
 export interface User {
   id: string
   username: string
+  Avatar?: Record<
+    any,
+    {
+      x: number
+      y: number
+    }
+  >
 }
 
 interface UserState {

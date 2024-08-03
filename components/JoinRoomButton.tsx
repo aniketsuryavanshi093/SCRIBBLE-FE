@@ -19,12 +19,13 @@ import {
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
 import { toast } from 'sonner'
+import { useUserStore } from '@/stores/userStore'
 
 type JoinRoomForm = z.infer<typeof joinRoomSchema>
 
 export default function JoinRoomButtoon() {
   const [isLoading, setIsLoading] = useState(false)
-
+  const { user } = useUserStore(state => state)
   const form = useForm<JoinRoomForm>({
     resolver: zodResolver(joinRoomSchema),
     defaultValues: {
@@ -35,7 +36,7 @@ export default function JoinRoomButtoon() {
 
   function onSubmit({ roomId, username }: JoinRoomForm) {
     setIsLoading(true)
-    socket.emit('join-room', { roomId, username })
+    socket.emit('join-room', { roomId, username, Avatar: user?.Avatar! })
   }
 
   useEffect(() => {

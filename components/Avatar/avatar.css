@@ -1,0 +1,127 @@
+#avatarSelector {
+    position: relative;
+    float: left;
+    text-align: center;
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+    user-select: none;
+    background-color: white;
+    transform: scale(1);
+}
+
+#avatarSelectorRandomize {
+    background-image: url("/random.gif");
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 6px;
+    width: 39px;
+    height: 39px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#avatarSelectorLeft {
+    background-size: 60px 60px;
+    background-position: center;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background-image: url("/left.gif");
+    position: absolute;
+}
+
+#avatarSelectorright {
+    background-size: 60px 60px;
+    background-image: url("/right.gif");
+    background-position: center;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    position: absolute;
+}
+
+.avatarSprite {
+    pointer-events: none;
+    position: absolute;
+    user-select: none;
+    margin: auto;
+    width: 198px;
+    height: 198px;
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+
+
+.avatarlegs {
+    z-index: 1;
+    display: flex;
+    margin: auto;
+    top: 45px;
+    width: 198px;
+    background-image: url("/body.gif");
+    background-position: 0px 0px;
+    height: 198px;
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+.avatarShadow {
+    position: absolute;
+    bottom: -33px;
+    left: 50px;
+    background-size: 95px 20px;
+    background-repeat: no-repeat;
+    width: 95px;
+    height: 20px;
+    z-index: 0;
+    opacity: .4;
+}
+
+#avatarSelectorAvatar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.listavatar {
+    height: 50px !important;
+    transform: scale(.45) !important;
+}
+
+.avatar {
+    pointer-events: none;
+    user-select: none;
+    -moz-user-select: none;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 198px;
+    height: 198px;
+    margin: auto;
+    transform: scale(1) translateY(-20%);
+}
+
+.avatarhat {
+    background-position: -792px -248px;
+    background-image: url("/hat.gif");
+}
+
+.avatarbody {
+    background-image: url("/body.gif");
+    background-position: 0px -248px;
+}
+
+.avatarmouth {
+    background-image: url("/mouth.gif");
+    background-position: 0px -248px;
+}
+
+.avatareyes {
+    background-image: url("/eyes.gif");
+    background-position: -594px -248px;
+}

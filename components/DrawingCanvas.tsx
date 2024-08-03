@@ -141,7 +141,7 @@ export default function DrawingCanvas() {
         onTouchStart={handleInteractStart}
         width={0}
         height={0}
-        className='touch-none rounded border bg-white'
+        className='h-full w-full touch-none rounded border bg-white'
       />
     </div>
   )

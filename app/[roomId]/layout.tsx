@@ -1,15 +1,15 @@
 import Header from '@/components/Header'
-import Sidebar from '@/components/Sidebar'
+import GameInfoContainer from '@/components/GameInfoContainer'
+import SideBar from '@/components/Sidebar'
 
 export default function RoomLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-
-      <div className='h-[calc(100vh-3.8rem)] lg:grid lg:grid-cols-[minmax(0,1fr)_15.5rem]'>
-        <main className='h-full'>{children}</main>
-
-        <Sidebar />
+      <div className='flex h-[calc(100vh-3.8rem)] flex-row items-stretch justify-center'>
+        <SideBar />
+        <main className='h-full flex-[7]'>{children}</main>
+        <GameInfoContainer />
       </div>
     </>
   )
