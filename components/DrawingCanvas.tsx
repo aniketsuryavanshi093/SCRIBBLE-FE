@@ -12,10 +12,12 @@ import useDraw, { type DrawProps } from '@/hooks/useDraw'
 import { Skeleton } from '@/components/ui/Skeleton'
 import UndoButton from '@/components/UndoButton'
 import ClearButton from '@/components/ClearButton'
+import useGameStateContext from '@/context/useGameStateContext'
 
 export default function DrawingCanvas() {
   const router = useRouter()
   const { roomId } = useParams()
+  const { GameState } = useGameStateContext()
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -124,9 +126,12 @@ export default function DrawingCanvas() {
     >
       {!isCanvasLoading && (
         <div className='absolute right-[25px] top-[25px] flex select-none rounded-none rounded-bl rounded-tr-[2.5px]'>
-          <UndoButton undo={undo} />
-
-          <ClearButton canvasRef={canvasRef} clear={clear} />
+          {GameState?.drawer === user?.id && (
+            <>
+              <UndoButton undo={undo} />
+              <ClearButton canvasRef={canvasRef} clear={clear} />
+            </>
+          )}
         </div>
       )}
 

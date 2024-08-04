@@ -17,3 +17,18 @@ export interface DrawOptions extends DrawProps {
   strokeWidth: number[]
   dashGap: number[]
 }
+export interface GameStateType {
+  gameState: 'started' | 'not-started'
+  drawer: string
+  word: string
+  score: Scoretype
+  curentRound: number
+}
+
+export type Scoretype = Record<
+  string,
+  {
+    score: number
+    worddrawoccurance: string
+  }
+>
