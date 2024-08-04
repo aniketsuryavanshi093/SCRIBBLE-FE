@@ -13,9 +13,8 @@ export default function LeaveButton() {
   const [isLoading, setIsLoading] = useState(false)
 
   return (
-    <Button
-      variant='destructive'
-      className='absolute bottom-0 w-full'
+    <button
+      className='relative bottom-0 me-4 w-auto rounded-lg bg-red-700 px-4 py-2 text-white'
       onClick={() => {
         setIsLoading(true)
         socket.emit('leave-room')
@@ -25,6 +24,6 @@ export default function LeaveButton() {
       }}
     >
       {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : 'Leave Room'}
-    </Button>
+    </button>
   )
 }

@@ -15,7 +15,7 @@ export default function ColorPicker() {
 
   return (
     <div>
-      <Label className='select-none'>Stroke Color</Label>
+      <Label className='select-none text-black'>Stroke Color</Label>
 
       <Popover>
         <PopoverTrigger asChild className='mt-2 w-full'>

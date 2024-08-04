@@ -1,7 +1,14 @@
 import { create } from 'zustand'
 
+export interface Message {
+  userid: string
+  roomId: string
+  message: string
+  username: string
+}
 export interface User {
   id: string
+  roomId?: string
   username: string
   Avatar?: Record<
     any,
