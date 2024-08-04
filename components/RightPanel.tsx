@@ -1,6 +1,5 @@
 import ColorPicker from '@/components/ColorPicker'
 import StrokeWidthSlider from '@/components/StrokeWidthSlider'
-import DashGapSlider from '@/components/DashGapSlider'
 import MemberList from '@/components/MemberList'
 import LeaveButton from '@/components/LeaveButton'
 
@@ -11,8 +10,6 @@ export default function RightPanel() {
         <ColorPicker />
 
         <StrokeWidthSlider />
-
-        <DashGapSlider />
 
         <MemberList />
 

@@ -105,7 +105,7 @@ export default function CreateRoomForm({ roomId }: CreateRoomFormProps) {
           </div>
         </div>
 
-        <Button type='submit' className='mt-2 w-full'>
+        <Button disabled={isLoading} type='submit' className='mt-2 w-full'>
           {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : 'Create a Room'}
         </Button>
       </form>

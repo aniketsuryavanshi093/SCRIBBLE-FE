@@ -3,7 +3,7 @@ import MemberList from './MemberList'
 
 const SideBar = () => {
   return (
-    <div className='hidden flex-[3] border-l px-3 py-4 lg:block'>
+    <div className='hidden flex-[3] border-l lg:block'>
       <MemberList />
     </div>
   )

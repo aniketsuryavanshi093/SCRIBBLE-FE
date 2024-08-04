@@ -1,0 +1,7 @@
+.messagelist {
+    height: calc(100vh - 330px)
+}
+
+.messagelist::-webkit-scrollbar {
+    display: none;
+}

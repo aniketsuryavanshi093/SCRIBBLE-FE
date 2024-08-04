@@ -68,10 +68,26 @@
   }
 }
 
+.mainlayout {
+  height: calc(100vh - 78px);
+}
+
+.bagclass {
+  background-image: url("/background.png");
+  background-repeat: repeat;
+  background-size: 350px;
+  overflow: hidden;
+  -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+}
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
