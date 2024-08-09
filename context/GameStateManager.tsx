@@ -3,27 +3,28 @@ import React, { FC, ReactNode, useEffect, useState } from 'react'
 import GameStateContext from './GameStateContext'
 import { socket } from '@/lib/socket'
 import { GameStateType } from '@/types'
+import { useGameStore } from '@/stores/gameStore'
+import { useParams } from 'next/navigation'
 
 const GameStateManager: FC<{ children: ReactNode }> = ({ children }) => {
-  const [GameStarted, setGameStarted] = useState(false)
-  const [GameState, setGameState] = useState<GameStateType | null>(null)
-
+  const { setgameState } = useGameStore(state => state)
+  const { roomId } = useParams()
   useEffect(() => {
-    socket.on('game-started', data => {
+    socket.on('game-started', (data: GameStateType) => {
       console.log('data', data)
-      setGameStarted(true)
-      setGameState(data)
+      setgameState(data)
+      socket.emit('drawerchoosingword', { roomId, id: data?.drawer })
     })
+
     socket.on('recievegamestate', data => {
       console.log('recievegamestate', data)
-      setGameState(data)
+      setgameState(data)
     })
   }, [socket])
   return (
     <GameStateContext.Provider
       value={{
-        GameStarted,
-        GameState,
+        setgameState,
       }}
     >
       {children}

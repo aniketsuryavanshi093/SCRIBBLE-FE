@@ -72,6 +72,15 @@
   height: calc(100vh - 78px);
 }
 
+.wordselect {
+  border: 2px solid rgba(233, 140, 18, 0.856);
+}
+
+.bgshadow {
+  opacity: .5;
+  background: #2a2a2ac5;
+}
+
 .bagclass {
   background-image: url("/background.png");
   background-repeat: repeat;

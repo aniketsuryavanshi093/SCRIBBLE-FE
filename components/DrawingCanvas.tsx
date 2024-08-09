@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-
-import type { DrawOptions } from '@/types'
+import type { DrawOptions, GameStateType } from '@/types'
 import { useCanvasStore } from '@/stores/canvasStore'
 import { useUserStore } from '@/stores/userStore'
 import { socket } from '@/lib/socket'
@@ -12,15 +11,17 @@ import useDraw, { type DrawProps } from '@/hooks/useDraw'
 import { Skeleton } from '@/components/ui/Skeleton'
 import UndoButton from '@/components/UndoButton'
 import ClearButton from '@/components/ClearButton'
+import { useGameStore } from '@/stores/gameStore'
 import useGameStateContext from '@/context/useGameStateContext'
+import SelectingWords from './SelectingWords'
 
 export default function DrawingCanvas() {
   const router = useRouter()
   const { roomId } = useParams()
-  const { GameState } = useGameStateContext()
-
+  const { gameState } = useGameStore()
+  const [Selecting, setSelecting] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-
+  const { setgameState } = useGameStateContext()
   const [isCanvasLoading, setIsCanvasLoading] = useState(true)
 
   const strokeColor = useCanvasStore(state => state.strokeColor)
@@ -69,12 +70,15 @@ export default function DrawingCanvas() {
       socket.emit('send-canvas-state', { canvasState, roomId })
     })
 
-    socket.on('canvas-state-from-server', (canvasState: string) => {
-      if (!ctx || !canvasElement) return
-
-      drawWithDataURL(canvasState, ctx, canvasElement)
-      setIsCanvasLoading(false)
-    })
+    socket.on(
+      'canvas-state-from-server',
+      ({ canvasState, gameState }: { canvasState: string; gameState: GameStateType }) => {
+        if (!ctx || !canvasElement) return
+        setgameState(gameState)
+        drawWithDataURL(canvasState, ctx, canvasElement)
+        setIsCanvasLoading(false)
+      }
+    )
 
     socket.on('update-canvas-state', (drawOptions: DrawOptions) => {
       if (!ctx) return
@@ -109,24 +113,35 @@ export default function DrawingCanvas() {
   }, [canvasRef])
 
   const handleInteractStart = () => {
-    const canvasElement = canvasRef.current
-    if (!canvasElement) return
+    if (gameState?.drawer === user?.id) {
+      const canvasElement = canvasRef.current
+      if (!canvasElement) return
 
-    socket.emit('add-undo-point', {
-      roomId,
-      undoPoint: canvasElement.toDataURL(),
-    })
-    onInteractStart()
+      socket.emit('add-undo-point', {
+        roomId,
+        undoPoint: canvasElement.toDataURL(),
+      })
+      onInteractStart()
+    }
   }
 
   return (
     <div
       ref={containerRef}
-      className='relative flex h-full w-full items-center justify-center'
+      className={`${
+        gameState && Selecting && 'bgshadow'
+      } relative flex h-full w-full items-center justify-center`}
     >
+      <SelectingWords
+        gameState={gameState!}
+        setSelecting={setSelecting}
+        user={user!}
+        selecting={Selecting}
+      />
+
       {!isCanvasLoading && (
         <div className='absolute right-[25px] top-[25px] flex select-none rounded-none rounded-bl rounded-tr-[2.5px]'>
-          {GameState?.drawer === user?.id && (
+          {gameState?.drawer === user?.id && (
             <>
               <UndoButton undo={undo} />
               <ClearButton canvasRef={canvasRef} clear={clear} />

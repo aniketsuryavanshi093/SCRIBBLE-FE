@@ -18,7 +18,7 @@ export interface DrawOptions extends DrawProps {
   dashGap: number[]
 }
 export interface GameStateType {
-  gameState: 'started' | 'not-started'
+  gameState: 'started' | 'not-started' | 'choosing-word'
   drawer: string
   word: string
   score: Scoretype
