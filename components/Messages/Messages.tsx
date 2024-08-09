@@ -47,7 +47,6 @@ const Messages = () => {
       setMessage('')
     }
   }
-
   return (
     <div className='flex h-full w-full flex-col items-end justify-end'>
       <div ref={messageListRef} className='messagelist w-full overflow-y-auto'>

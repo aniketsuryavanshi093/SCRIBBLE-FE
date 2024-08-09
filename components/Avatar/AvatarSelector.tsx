@@ -211,25 +211,25 @@ const AvatarSelector: FC<{
       <div id='avatarSelectorAvatar' className='avatar'>
         <div
           style={{
-            backgroundPosition: `${AvatarConfig.hat.x}px ${AvatarConfig.hat.y}px`,
+            backgroundPosition: `${AvatarConfig?.hat?.x}px ${AvatarConfig?.hat?.y}px`,
           }}
           className='avatarSprite avatarhat z-[7]'
         />
         <div
           style={{
-            backgroundPosition: `${AvatarConfig.eyes.x}px ${AvatarConfig.eyes.y}px`,
+            backgroundPosition: `${AvatarConfig?.eyes?.x}px ${AvatarConfig?.eyes?.y}px`,
           }}
           className='avatarSprite avatareyes z-[4]'
         />
         <div
           style={{
-            backgroundPosition: `${AvatarConfig.mouth.x}px ${AvatarConfig.mouth.y}px`,
+            backgroundPosition: `${AvatarConfig?.mouth?.x}px ${AvatarConfig?.mouth?.y}px`,
           }}
           className='avatarSprite avatarmouth z-[1]'
         />
         <div
           style={{
-            backgroundPosition: `${AvatarConfig.body.x}px ${AvatarConfig.body.y}px`,
+            backgroundPosition: `${AvatarConfig?.body?.x}px ${AvatarConfig?.body?.y}px`,
           }}
           className='avatarSprite avatarbody z-0'
         />
