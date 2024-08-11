@@ -4,20 +4,21 @@ import LeaveButton from '../LeaveButton'
 import { useGameStore } from '@/stores/gameStore'
 import WordComponent from './WordComponent'
 import GuessTimer from './GuessTimer'
+import { socket } from '@/lib/socket'
+import { useParams } from 'next/navigation'
+import { useUserStore } from '@/stores/userStore'
 
 const GameHeader = () => {
   const { gameState, showPointsTable, setPointsTable } = useGameStore(state => state)
-  useEffect(() => {
-    if (showPointsTable) {
-      setTimeout(() => {
-        setPointsTable(false)
-      }, 120000)
-    }
-  }, [showPointsTable, setPointsTable])
+  const { user } = useUserStore(state => state)
+  const { roomId } = useParams()
 
   const setIscompleted = () => {
     setPointsTable(true)
     console.log('completed')
+    if (gameState?.drawer === user?.id) {
+      socket.emit('update-scorecard', { roomId })
+    }
   }
   return (
     <div className='mb-2 flex h-[50px] w-full items-center justify-between bg-slate-100'>

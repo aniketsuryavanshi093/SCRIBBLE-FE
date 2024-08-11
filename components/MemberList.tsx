@@ -8,12 +8,14 @@ import { useMembersStore } from '@/stores/membersStore'
 import { socket } from '@/lib/socket'
 // import { ScrollArea } from '@/components/ui/ScrollArea'
 import AvatarSelector from './Avatar/AvatarSelector'
+import { useGameStore } from '@/stores/gameStore'
 
 export default function MemberList() {
   const [members, setMembers] = useMembersStore(state => [
     state.members,
     state.setMembers,
   ])
+  const { gameState } = useGameStore(state => state)
   console.log(members)
 
   useEffect(() => {
@@ -41,7 +43,9 @@ export default function MemberList() {
           {members.map(({ id, username, Avatar }) => (
             <div
               key={id}
-              className='relative flex h-16 w-full items-center justify-start gap-2'
+              className={`${
+                gameState?.guessedWordUserState![id]?.isGuessed! && 'bg-green-500'
+              } relative flex h-16 w-full items-center justify-start gap-2`}
             >
               <div className='memberavatar absolute bottom-[-31%] left-[-10%]'>
                 <AvatarSelector
@@ -50,9 +54,14 @@ export default function MemberList() {
                   isEditor={false}
                 />
               </div>
-              <p key={id} className='ms-[18%] text-sm text-black'>
-                {username}
-              </p>
+              <div className='flex w-full flex-col items-center justify-between text-black'>
+                <p key={id} className='text-sm'>
+                  {username}
+                </p>
+                <p className='text-sm font-thin'>
+                  Score: {gameState?.score[id] ? gameState?.score[id]?.score : 0}
+                </p>
+              </div>
             </div>
           ))}
         </div>

@@ -23,6 +23,13 @@ export interface GameStateType {
   word: string
   score: Scoretype
   lastGuesstime: number
+  guessedWordUserState?: Record<
+    string,
+    {
+      isGuessed: boolean
+      guessedTime: number
+    }
+  > | null
   curentRound: number
 }
 

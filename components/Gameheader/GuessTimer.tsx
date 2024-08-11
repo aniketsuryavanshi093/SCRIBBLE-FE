@@ -1,4 +1,5 @@
 'use client'
+import { useGameStore } from '@/stores/gameStore'
 import { GameStateType } from '@/types'
 import Image from 'next/image'
 import React, { FC } from 'react'
@@ -8,6 +9,7 @@ const GuessTimer: FC<{ gamestate: GameStateType; setIscompleted: () => void }> =
   gamestate,
   setIscompleted,
 }) => {
+  const { Timerstatr, setTImerstart } = useGameStore(state => state)
   const renderer = ({
     minutes,
     seconds,
@@ -20,7 +22,8 @@ const GuessTimer: FC<{ gamestate: GameStateType; setIscompleted: () => void }> =
     if (completed) {
       // Render a completed state
       setIscompleted()
-      return null
+      setTImerstart(false)
+      // return null
     } else {
       // Render a countdown
       return <span>{60 * minutes + seconds}</span>
@@ -28,8 +31,11 @@ const GuessTimer: FC<{ gamestate: GameStateType; setIscompleted: () => void }> =
   }
   return (
     <>
-      <div className='absolute right-[13px] top-[10px] z-[1] text-base font-semibold text-black'>
-        <Countdown date={gamestate?.lastGuesstime} renderer={renderer} />
+      <div
+        id='timer'
+        className='absolute right-[13px] top-[10px] z-[1] text-base font-semibold text-black'
+      >
+        {Timerstatr && <Countdown date={gamestate?.lastGuesstime} renderer={renderer} />}
       </div>
       <Image
         src='/clock.gif'
