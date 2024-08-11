@@ -18,10 +18,18 @@ export interface DrawOptions extends DrawProps {
   dashGap: number[]
 }
 export interface GameStateType {
-  gameState: 'started' | 'not-started' | 'choosing-word'
+  gameState: 'started' | 'not-started' | 'choosing-word' | 'guessing-word'
   drawer: string
   word: string
   score: Scoretype
+  lastGuesstime: number
+  guessedWordUserState?: Record<
+    string,
+    {
+      isGuessed: boolean
+      guessedTime: number
+    }
+  > | null
   curentRound: number
 }
 

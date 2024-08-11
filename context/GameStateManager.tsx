@@ -15,7 +15,6 @@ const GameStateManager: FC<{ children: ReactNode }> = ({ children }) => {
       setgameState(data)
       socket.emit('drawerchoosingword', { roomId, id: data?.drawer })
     })
-
     socket.on('recievegamestate', data => {
       console.log('recievegamestate', data)
       setgameState(data)

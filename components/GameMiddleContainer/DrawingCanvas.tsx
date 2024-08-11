@@ -9,11 +9,12 @@ import { socket } from '@/lib/socket'
 import { draw, drawWithDataURL } from '@/lib/utils'
 import useDraw, { type DrawProps } from '@/hooks/useDraw'
 import { Skeleton } from '@/components/ui/Skeleton'
-import UndoButton from '@/components/UndoButton'
-import ClearButton from '@/components/ClearButton'
+import UndoButton from '@/components/GameMiddleContainer/UndoButton'
+import ClearButton from '@/components/GameMiddleContainer/ClearButton'
 import { useGameStore } from '@/stores/gameStore'
 import useGameStateContext from '@/context/useGameStateContext'
 import SelectingWords from './SelectingWords'
+import ShowPointsTable from './ShowPointsTable'
 
 export default function DrawingCanvas() {
   const router = useRouter()
@@ -22,6 +23,7 @@ export default function DrawingCanvas() {
   const [Selecting, setSelecting] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const { setgameState } = useGameStateContext()
+  const { showPointsTable } = useGameStore(state => state)
   const [isCanvasLoading, setIsCanvasLoading] = useState(true)
 
   const strokeColor = useCanvasStore(state => state.strokeColor)
@@ -129,7 +131,7 @@ export default function DrawingCanvas() {
     <div
       ref={containerRef}
       className={`${
-        gameState && Selecting && 'bgshadow'
+        ((gameState && Selecting) || showPointsTable) && 'bgshadow'
       } relative flex h-full w-full items-center justify-center`}
     >
       <SelectingWords
@@ -138,6 +140,8 @@ export default function DrawingCanvas() {
         user={user!}
         selecting={Selecting}
       />
+
+      <ShowPointsTable gameState={gameState!} />
 
       {!isCanvasLoading && (
         <div className='absolute right-[25px] top-[25px] flex select-none rounded-none rounded-bl rounded-tr-[2.5px]'>

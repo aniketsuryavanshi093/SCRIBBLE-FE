@@ -1,5 +1,5 @@
-import GameHeader from '@/components/GameHeader'
-import GameInfoContainer from '@/components/GameInfoContainer'
+import GameHeader from '@/components/Gameheader/GameHeader'
+import GameInfoContainer from '@/components/GameMiddleContainer/GameInfoContainer'
 import SideBar from '@/components/Sidebar'
 import GameStateManager from '@/context/GameStateManager'
 
