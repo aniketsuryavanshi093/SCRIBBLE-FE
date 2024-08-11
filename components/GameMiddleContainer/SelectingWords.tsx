@@ -1,7 +1,7 @@
 import { GameStateType } from '@/types'
 import { useAnimation, motion } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
-import AvatarSelector from './Avatar/AvatarSelector'
+import AvatarSelector from '../Avatar/AvatarSelector'
 import { useMembersStore } from '@/stores/membersStore'
 import { socket } from '@/lib/socket'
 import { useParams } from 'next/navigation'
