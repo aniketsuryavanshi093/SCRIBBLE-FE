@@ -16,8 +16,6 @@ export default function MemberList() {
     state.setMembers,
   ])
   const { gameState } = useGameStore(state => state)
-  console.log(members)
-
   useEffect(() => {
     socket.on('update-members', members => {
       setMembers(members)
@@ -44,7 +42,10 @@ export default function MemberList() {
             <div
               key={id}
               className={`${
-                gameState?.guessedWordUserState![id]?.isGuessed! && 'bg-green-500'
+                gameState?.gameState === 'guessing-word' &&
+                gameState?.guessedWordUserState &&
+                gameState?.guessedWordUserState![id]?.isGuessed! &&
+                'bg-green-500'
               } relative flex h-16 w-full items-center justify-start gap-2`}
             >
               <div className='memberavatar absolute bottom-[-31%] left-[-10%]'>

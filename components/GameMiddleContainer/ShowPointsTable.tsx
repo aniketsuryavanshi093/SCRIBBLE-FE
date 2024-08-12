@@ -5,12 +5,13 @@ import { GameStateType } from '@/types'
 import { useAnimation, motion } from 'framer-motion'
 import { useMembersStore } from '@/stores/membersStore'
 import { socket } from '@/lib/socket'
+import { useParams } from 'next/navigation'
 
 const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
   const controls = useAnimation()
   const { showPointsTable, setPointsTable, setTImerstart } = useGameStore(state => state)
   const { members } = useMembersStore(state => state)
-
+  const { roomId } = useParams()
   const setControls = async () => {
     await controls.start({
       y: '-100%',
@@ -28,6 +29,7 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
         })
         await new Promise(resolve => setTimeout(resolve, 10000))
         setControls()
+        socket.emit('change-drawer', { roomId })
         setPointsTable(false)
         setTImerstart(false)
       }
@@ -36,8 +38,6 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
       setControls()
     }
   }, [controls, gameState, setControls, showPointsTable, socket])
-  console.log('showPointsTable', showPointsTable)
-
   return (
     <motion.div
       initial={{ y: '-100%' }}
