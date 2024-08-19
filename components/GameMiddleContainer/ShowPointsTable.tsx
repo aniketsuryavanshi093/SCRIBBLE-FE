@@ -1,15 +1,27 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useGameStore } from '@/stores/gameStore'
 import { GameStateType } from '@/types'
 import { useAnimation, motion } from 'framer-motion'
 import { useMembersStore } from '@/stores/membersStore'
 import { socket } from '@/lib/socket'
+import { useParams } from 'next/navigation'
+import { useUserStore } from '@/stores/userStore'
 
 const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
   const controls = useAnimation()
   const { showPointsTable, setPointsTable, setTImerstart } = useGameStore(state => state)
+  const { user } = useUserStore(state => state)
   const { members } = useMembersStore(state => state)
+  const { roomId } = useParams()
+
+  // Ref to store the latest gameState
+  const latestGameStateRef = useRef(gameState)
+  const isemitref = useRef(false)
+
+  // Update the ref whenever gameState changes
+  useEffect(() => {
+    latestGameStateRef.current = gameState
+  }, [gameState])
 
   const setControls = async () => {
     await controls.start({
@@ -18,8 +30,9 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
       transition: { duration: 0.5 },
     })
   }
+
   useEffect(() => {
-    if (showPointsTable) {
+    if (showPointsTable && latestGameStateRef.current?.gameState === 'guessing-word') {
       const sequence = async () => {
         await controls.start({
           y: 'calc(100vh - 480px)',
@@ -27,6 +40,15 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
           display: 'block',
         })
         await new Promise(resolve => setTimeout(resolve, 10000))
+        // Use the latest gameState from the ref
+        if (
+          latestGameStateRef.current?.drawer === user?.id &&
+          latestGameStateRef.current?.gameState === 'guessing-word' &&
+          !isemitref.current
+        ) {
+          socket.emit('drawerchoosingword', { roomId, type: 'change' })
+        }
+        isemitref.current = true
         setControls()
         setPointsTable(false)
         setTImerstart(false)
@@ -35,8 +57,7 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
     } else {
       setControls()
     }
-  }, [controls, gameState, setControls, showPointsTable, socket])
-  console.log('showPointsTable', showPointsTable)
+  }, [controls, setControls, showPointsTable, socket, user])
 
   return (
     <motion.div
@@ -53,13 +74,9 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
             {Object.keys(gameState.score)?.map(elem => (
               <div key={elem} className='flex items-center justify-center gap-2'>
                 <p className='text-lg font-extrabold'>
-                  {' '}
-                  {members?.find(el => el.id === elem)?.username}{' '}
+                  {members?.find(el => el.id === elem)?.username}
                 </p>
-                <p className='text-lg font-extrabold'>
-                  {' '}
-                  {gameState?.score[elem]?.score}{' '}
-                </p>
+                <p className='text-lg font-extrabold'>{gameState?.score[elem]?.score} </p>
               </div>
             ))}
           </div>

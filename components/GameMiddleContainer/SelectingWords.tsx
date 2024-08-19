@@ -6,7 +6,7 @@ import { useMembersStore } from '@/stores/membersStore'
 import { socket } from '@/lib/socket'
 import { useParams } from 'next/navigation'
 import { User } from '@/stores/userStore'
-
+import { useGameStore } from '@/stores/gameStore'
 const SelectingWords = ({
   gameState,
   setSelecting,
@@ -20,6 +20,7 @@ const SelectingWords = ({
 }) => {
   const { roomId } = useParams()
   const [SelectedWord, setSelectedWord] = useState('')
+  const { setTImerstart } = useGameStore(state => state)
 
   const controls = useAnimation()
   const setControls = async () => {
@@ -33,6 +34,7 @@ const SelectingWords = ({
   useEffect(() => {
     if (SelectedWord && gameState?.gameState === 'choosing-word') {
       socket.emit('selectword', { roomId, word: SelectedWord, id: socket.id })
+      setSelectedWord('')
     }
   }, [SelectedWord, gameState])
 
@@ -40,7 +42,11 @@ const SelectingWords = ({
     if (gameState?.gameState === 'choosing-word') {
       const sequence = async () => {
         setSelecting(true)
-        await controls.start({ y: 'calc(100vh - 480px)', transition: { duration: 0.5 } })
+        await controls.start({
+          y: 'calc(100vh - 480px)',
+          transition: { duration: 0.5 },
+          display: 'block',
+        })
         await new Promise(resolve => setTimeout(resolve, 10000))
         setControls()
       }
@@ -51,6 +57,8 @@ const SelectingWords = ({
   useEffect(() => {
     socket.on('wordselected', (word: string) => {
       setControls()
+      setSelectedWord('')
+      setTImerstart(true)
     })
     return () => {
       socket.off('wordselected')
@@ -64,7 +72,7 @@ const SelectingWords = ({
       className='absolute left-0 right-0 top-0 z-50 flex items-center justify-between gap-5 p-4 text-center text-white'
     >
       {gameState && selecting ? (
-        gameState?.gameState === 'choosing-word' && gameState?.drawer === user?.id ? (
+        gameState?.drawer === user?.id ? (
           <div className='m-auto flex w-[50%] items-center justify-between'>
             <div
               onClick={() => setSelectedWord('word!')}

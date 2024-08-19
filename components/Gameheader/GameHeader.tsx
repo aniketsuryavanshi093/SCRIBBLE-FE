@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useRef } from 'react'
 import LeaveButton from '../LeaveButton'
 import { useGameStore } from '@/stores/gameStore'
 import WordComponent from './WordComponent'
@@ -9,22 +9,23 @@ import { useParams } from 'next/navigation'
 import { useUserStore } from '@/stores/userStore'
 
 const GameHeader = () => {
-  const { gameState, showPointsTable, setPointsTable } = useGameStore(state => state)
+  const { gameState, setPointsTable } = useGameStore(state => state)
   const { user } = useUserStore(state => state)
   const { roomId } = useParams()
+  const isemitref = useRef(false)
 
   const setIscompleted = () => {
     setPointsTable(true)
-    console.log('completed')
-    if (gameState?.drawer === user?.id) {
+    if (gameState?.drawer === user?.id && !isemitref.current) {
       socket.emit('update-scorecard', { roomId })
+      isemitref.current = true
     }
   }
   return (
     <div className='mb-2 flex h-[50px] w-full items-center justify-between bg-slate-100'>
       <div className='relative h-10 w-10'>
         {gameState?.gameState === 'guessing-word' && (
-          <GuessTimer setIscompleted={setIscompleted} gamestate={gameState!} />
+          <GuessTimer setIscompleted={setIscompleted} gamestate={gameState} />
         )}
       </div>
       <div className='grid h-full w-auto place-content-center'>

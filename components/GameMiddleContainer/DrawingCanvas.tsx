@@ -126,6 +126,14 @@ export default function DrawingCanvas() {
       onInteractStart()
     }
   }
+  useEffect(() => {
+    socket.on('clear-canvas', clear)
+    return () => {
+      socket.off('clear-canvas')
+    }
+  }, [clear])
+
+  console.log('showPointsTable', showPointsTable)
 
   return (
     <div
@@ -140,8 +148,7 @@ export default function DrawingCanvas() {
         user={user!}
         selecting={Selecting}
       />
-
-      <ShowPointsTable gameState={gameState!} />
+      {showPointsTable && <ShowPointsTable gameState={gameState!} />}
 
       {!isCanvasLoading && (
         <div className='absolute right-[25px] top-[25px] flex select-none rounded-none rounded-bl rounded-tr-[2.5px]'>
