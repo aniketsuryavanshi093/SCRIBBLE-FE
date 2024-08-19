@@ -45,7 +45,7 @@ const Messages = () => {
         message: message.trim(),
         username: user?.username,
       })
-      if (message?.trim() === gameState?.word) {
+      if (message?.trim() === gameState?.word && gameState?.drawer !== user?.id) {
         socket.emit('guessed-word', {
           userId: user?.id,
           roomId: user?.roomId,
