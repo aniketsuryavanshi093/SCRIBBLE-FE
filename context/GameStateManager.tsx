@@ -7,12 +7,15 @@ import { useGameStore } from '@/stores/gameStore'
 import { useParams } from 'next/navigation'
 
 const GameStateManager: FC<{ children: ReactNode }> = ({ children }) => {
-  const { setgameState } = useGameStore(state => state)
+  const { setgameState, setPointsTable } = useGameStore(state => state)
   const { roomId } = useParams()
   useEffect(() => {
     socket.on('game-started', (data: GameStateType) => {
       console.log('data', data)
       setgameState(data)
+      if (data?.gameState === 'finished') {
+        setPointsTable(true)
+      }
       socket.emit('drawerchoosingword', { roomId, id: data?.drawer })
     })
     socket.on('recievegamestate', data => {
