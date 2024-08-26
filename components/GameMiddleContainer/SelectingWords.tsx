@@ -1,12 +1,14 @@
 import { GameStateType } from '@/types'
 import { useAnimation, motion } from 'framer-motion'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import AvatarSelector from '../Avatar/AvatarSelector'
 import { useMembersStore } from '@/stores/membersStore'
 import { socket } from '@/lib/socket'
 import { useParams } from 'next/navigation'
 import { User } from '@/stores/userStore'
 import { useGameStore } from '@/stores/gameStore'
+import { generate } from 'random-words'
+import { log } from 'console'
 const SelectingWords = ({
   gameState,
   setSelecting,
@@ -60,7 +62,6 @@ const SelectingWords = ({
 
   useEffect(() => {
     socket.on('wordselected', (word: string) => {
-      // setControls()
       setSelectedWord('')
       setTImerstart(true)
     })
@@ -68,7 +69,14 @@ const SelectingWords = ({
       socket.off('wordselected')
     }
   }, [socket])
-
+  // @ts-ignore
+  const words = useMemo<string[]>(() => {
+    const fourto5 = generate({ minLength: 4, maxLength: 5 })
+    const threeto4 = generate({ minLength: 3, maxLength: 4 })
+    const fiveto6 = generate({ minLength: 5, maxLength: 6 })
+    return [fourto5, threeto4, fiveto6]
+  }, [selecting])
+  console.log(words)
   return (
     <motion.div
       initial={{ y: '-100%' }}
@@ -78,14 +86,15 @@ const SelectingWords = ({
       {gameState && selecting ? (
         gameState?.drawer === user?.id ? (
           <div className='m-auto flex w-[50%] items-center justify-between'>
-            <div
-              onClick={() => setSelectedWord('word!')}
-              className='wordselect px-3 py-[6px] text-orange-700'
-            >
-              Word 1
-            </div>
-            <div className='wordselect px-3 py-[6px] text-orange-700'>Word 2</div>
-            <div className='wordselect px-3 py-[6px] text-orange-700'>Word 3</div>
+            {words?.map(elem => (
+              <div
+                key={elem}
+                onClick={() => setSelectedWord(elem)}
+                className='wordselect px-3 py-[6px] text-orange-700'
+              >
+                {elem}
+              </div>
+            ))}
           </div>
         ) : (
           <SelectingUserPara gameState={gameState} />

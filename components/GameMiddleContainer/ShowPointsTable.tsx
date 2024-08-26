@@ -1,24 +1,24 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useMemo, useRef } from 'react'
 import { useGameStore } from '@/stores/gameStore'
 import { GameStateType } from '@/types'
 import { useAnimation, motion } from 'framer-motion'
 import { useMembersStore } from '@/stores/membersStore'
 import { socket } from '@/lib/socket'
 import { useParams } from 'next/navigation'
-import { useUserStore } from '@/stores/userStore'
+import { User, useUserStore } from '@/stores/userStore'
+import AvatarSelector from '../Avatar/AvatarSelector'
+import Image from 'next/image'
 
 const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
   const controls = useAnimation()
-  const { showPointsTable, setPointsTable, setTImerstart } = useGameStore(state => state)
+  const { showPointsTable, setPointsTable } = useGameStore(state => state)
   const { user } = useUserStore(state => state)
   const { members } = useMembersStore(state => state)
   const { roomId } = useParams()
 
-  // Ref to store the latest gameState
   const latestGameStateRef = useRef(gameState)
   const isemitref = useRef(false)
 
-  // Update the ref whenever gameState changes
   useEffect(() => {
     latestGameStateRef.current = gameState
   }, [gameState])
@@ -32,15 +32,16 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
   }
 
   useEffect(() => {
-    if (showPointsTable && latestGameStateRef.current?.gameState === 'guessing-word') {
+    if (
+      (showPointsTable && latestGameStateRef.current?.gameState === 'guessing-word') ||
+      latestGameStateRef.current?.gameState === 'finished'
+    ) {
       const sequence = async () => {
         await controls.start({
           y: 'calc(100vh - 480px)',
           transition: { duration: 0.5 },
           display: 'block',
         })
-        // await new Promise(resolve => setTimeout(resolve, 10000))
-        // Use the latest gameState from the ref
         if (
           latestGameStateRef.current?.drawer === user?.id &&
           latestGameStateRef.current?.gameState === 'guessing-word' &&
@@ -51,17 +52,38 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
           }, 10000)
         }
         isemitref.current = true
-        // setControls()
-        // setPointsTable(false)
-        // setTImerstart(false)
       }
       sequence()
     } else {
       setPointsTable(false)
-      // setControls()
     }
   }, [controls, setControls, showPointsTable, socket, user])
-
+  const winners = useMemo(() => {
+    let winners: User[] = []
+    const temp = members
+      .map(member => {
+        return {
+          ...member,
+          score: gameState?.score[member.id]?.score || 0,
+        }
+      })
+      ?.sort((a, b) => b.score - a.score)
+      .slice(0, 3)
+    winners = [temp[1], temp[0], temp[2]]
+    return winners
+  }, [members, gameState?.score])
+  const getImage = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return <p className='mb-3'>2nd</p>
+      case 2:
+        return <p className='mb-3'>1st</p>
+      case 3:
+        return <p className='mb-3'>3rd</p>
+      default:
+        break
+    }
+  }
   return (
     <motion.div
       initial={{ y: '-100%' }}
@@ -70,19 +92,59 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
     >
       {showPointsTable && (
         <div className='m-auto flex w-[50%] flex-col items-center justify-between text-black'>
-          <p className='text-xl font-semibold'>The time is up!</p>
-          <p className='text-xl font-semibold'>The word was {gameState?.word}</p>
-
-          <div className='flex flex-col items-center justify-center gap-2'>
-            {Object.keys(gameState.score)?.map(elem => (
-              <div key={elem} className='flex items-center justify-center gap-2'>
-                <p className='text-lg font-extrabold'>
-                  {members?.find(el => el.id === elem)?.username}
-                </p>
-                <p className='text-lg font-extrabold'>{gameState?.score[elem]?.score} </p>
+          {gameState?.gameState === 'finished' ? (
+            <div className=''>
+              <p className='flex items-center justify-center text-xl font-semibold'>
+                Game Finished{' '}
+                <Image
+                  className='h-[30px] w-[30px]'
+                  src='/racing-flag.png'
+                  alt='finish'
+                  width={30}
+                  height={30}
+                />
+              </p>
+              <div className='flex items-center justify-center gap-7'>
+                {winners?.map((winner, index) => (
+                  <div
+                    key={winner.id}
+                    className={`flex flex-col items-center justify-center ${
+                      index == 1 && 'mb-10'
+                    }`}
+                  >
+                    {getImage(index + 1)}
+                    <AvatarSelector
+                      avatarclassname='pointsavatar'
+                      config={winner.Avatar}
+                      isEditor={false}
+                    />
+                    <p className='text-lg font-extrabold'>{winner?.username}</p>
+                    <p className='text-base font-semibold text-green-800'>
+                      {/* @ts-ignore */}
+                      {winner?.score!}
+                    </p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <>
+              <p className='text-xl font-semibold'>The time is up!</p>
+              <p className='text-xl font-semibold'>The word was {gameState?.word}</p>
+              <div className='flex flex-col items-center justify-center gap-2'>
+                {Object.keys(gameState.score)?.map(elem => (
+                  <div key={elem} className='flex items-center justify-center gap-2'>
+                    <p className='text-lg font-extrabold'>
+                      {members?.find(el => el.id === elem)?.username}
+                    </p>
+                    <p className='text-lg font-extrabold'>
+                      {gameState?.score[elem]?.score}{' '}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
     </motion.div>

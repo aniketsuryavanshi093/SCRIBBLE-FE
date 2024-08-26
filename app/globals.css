@@ -76,6 +76,16 @@
   border: 2px solid rgba(233, 140, 18, 0.856);
 }
 
+.pointsavatar {
+  transform: scale(.35) !important;
+  height: 50px !important;
+}
+
+.pointsavatar #avatarSelectorAvatar {
+  top: 20% !important;
+  left: -66px !important;
+}
+
 .bgshadow {
   opacity: .5;
   background: #2a2a2ac5;
