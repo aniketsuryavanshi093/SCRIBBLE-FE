@@ -39,23 +39,26 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
           transition: { duration: 0.5 },
           display: 'block',
         })
-        await new Promise(resolve => setTimeout(resolve, 10000))
+        // await new Promise(resolve => setTimeout(resolve, 10000))
         // Use the latest gameState from the ref
         if (
           latestGameStateRef.current?.drawer === user?.id &&
           latestGameStateRef.current?.gameState === 'guessing-word' &&
           !isemitref.current
         ) {
-          socket.emit('drawerchoosingword', { roomId, type: 'change' })
+          setTimeout(() => {
+            socket.emit('drawerchoosingword', { roomId, type: 'change' })
+          }, 10000)
         }
         isemitref.current = true
-        setControls()
-        setPointsTable(false)
-        setTImerstart(false)
+        // setControls()
+        // setPointsTable(false)
+        // setTImerstart(false)
       }
       sequence()
     } else {
-      setControls()
+      setPointsTable(false)
+      // setControls()
     }
   }, [controls, setControls, showPointsTable, socket, user])
 

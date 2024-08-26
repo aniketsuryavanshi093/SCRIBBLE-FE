@@ -142,12 +142,14 @@ export default function DrawingCanvas() {
         ((gameState && Selecting) || showPointsTable) && 'bgshadow'
       } relative flex h-full w-full items-center justify-center`}
     >
-      <SelectingWords
-        gameState={gameState!}
-        setSelecting={setSelecting}
-        user={user!}
-        selecting={Selecting}
-      />
+      {
+        <SelectingWords
+          gameState={gameState!}
+          setSelecting={setSelecting}
+          user={user!}
+          selecting={Selecting}
+        />
+      }
       {showPointsTable && <ShowPointsTable gameState={gameState!} />}
 
       {!isCanvasLoading && (

@@ -30,7 +30,7 @@ export interface GameStateType {
       guessedTime: number
     }
   > | null
-  curentRound: number
+  currentRound: number
 }
 
 export type Scoretype = Record<

@@ -20,7 +20,7 @@ const SelectingWords = ({
 }) => {
   const { roomId } = useParams()
   const [SelectedWord, setSelectedWord] = useState('')
-  const { setTImerstart } = useGameStore(state => state)
+  const { setTImerstart, setPointsTable } = useGameStore(state => state)
 
   const controls = useAnimation()
   const setControls = async () => {
@@ -29,12 +29,13 @@ const SelectingWords = ({
       display: 'none',
       transition: { duration: 0.5 },
     })
-    setSelecting(false)
   }
   useEffect(() => {
     if (SelectedWord && gameState?.gameState === 'choosing-word') {
       socket.emit('selectword', { roomId, word: SelectedWord, id: socket.id })
       setSelectedWord('')
+      setSelecting(false)
+      setPointsTable(false)
     }
   }, [SelectedWord, gameState])
 
@@ -47,16 +48,19 @@ const SelectingWords = ({
           transition: { duration: 0.5 },
           display: 'block',
         })
-        await new Promise(resolve => setTimeout(resolve, 10000))
-        setControls()
+        // await new Promise(resolve => setTimeout(resolve, 10000))
+        // setSelecting(false)
+        // setControls()
       }
       sequence()
+    } else {
+      setSelecting(false)
     }
   }, [gameState])
 
   useEffect(() => {
     socket.on('wordselected', (word: string) => {
-      setControls()
+      // setControls()
       setSelectedWord('')
       setTImerstart(true)
     })
