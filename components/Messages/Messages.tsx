@@ -66,7 +66,7 @@ const Messages = () => {
                 msg.message === gameState?.word! && 'text-green-600'
               } text-sm font-semibold`}
             >
-              {msg.message}
+              {msg.message === gameState?.word ? 'Guessed the word!' : msg.message}
             </span>
           </div>
         ))}

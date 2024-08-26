@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { toast } from 'sonner'
 
 import type { Notification } from '@/types'
@@ -32,13 +32,22 @@ export default function MemberList() {
       socket.off('send-notification')
     }
   }, [setMembers])
-
+  let membersscore = useMemo(() => {
+    return members
+      .map(member => {
+        return {
+          ...member,
+          score: gameState?.score[member.id]?.score || 0,
+        }
+      })
+      ?.sort((a, b) => b.score - a.score)
+  }, [members, gameState?.score])
   return (
     <div className='h-full select-none bg-slate-100 p-3'>
       <h2 className='pb-2.5 font-medium text-black'>Members</h2>
       <div className='h-full w-full rounded-md'>
         <div className='flex flex-col gap-1 rounded-md'>
-          {members.map(({ id, username, Avatar }) => (
+          {membersscore.map(({ id, username, Avatar }) => (
             <div
               key={id}
               className={`${

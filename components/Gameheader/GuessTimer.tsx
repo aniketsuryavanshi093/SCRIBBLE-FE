@@ -41,8 +41,8 @@ const GuessTimer: FC<{ gamestate: GameStateType; setIscompleted: () => void }> =
         src='/clock.gif'
         alt='clock'
         className='relative z-0'
-        width={40}
-        height={40}
+        width={50}
+        height={50}
         unoptimized
       />
     </>
