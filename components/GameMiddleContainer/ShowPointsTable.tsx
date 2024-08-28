@@ -49,6 +49,7 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
         ) {
           setTimeout(() => {
             socket.emit('drawerchoosingword', { roomId, type: 'change' })
+            socket.emit('set-words-indicator', { roomId, exposedWords: [] })
           }, 10000)
         }
         isemitref.current = true
