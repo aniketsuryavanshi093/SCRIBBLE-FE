@@ -10,6 +10,7 @@ const GuessTimer: FC<{ gamestate: GameStateType; setIscompleted: () => void }> =
   setIscompleted,
 }) => {
   const { Timerstatr, setTImerstart } = useGameStore(state => state)
+
   const renderer = ({
     minutes,
     seconds,
