@@ -48,7 +48,7 @@ const GameHeader = () => {
       <div className='grid h-full w-auto place-content-center'>
         {gameState && gameState.gameState === 'guessing-word' ? (
           gameState?.gameState === 'guessing-word' ? (
-            <WordComponent word={gameState?.word} />
+            <WordComponent word={gameState?.word} user={user!} gamestate={gameState} />
           ) : null
         ) : (
           <p className='text-lg font-semibold text-orange-500'>
