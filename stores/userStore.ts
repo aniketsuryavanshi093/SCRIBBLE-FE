@@ -8,6 +8,7 @@ export interface Message {
 }
 export interface User {
   id: string
+  isAdmin: boolean
   roomId?: string
   username: string
   Avatar?: Record<

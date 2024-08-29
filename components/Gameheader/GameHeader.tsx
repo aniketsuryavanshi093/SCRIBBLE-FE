@@ -23,6 +23,8 @@ const GameHeader = () => {
       isemitref.current = true
     }
   }
+  console.log(gameState)
+
   return (
     <div className='mb-2 flex h-[50px] w-full items-center justify-between bg-slate-100'>
       <div className='relative flex h-10 w-10 items-center'>
@@ -47,13 +49,26 @@ const GameHeader = () => {
       </div>
       <div className='grid h-full w-auto place-content-center'>
         {gameState && gameState.gameState === 'guessing-word' ? (
-          gameState?.gameState === 'guessing-word' ? (
-            <WordComponent word={gameState?.word} user={user!} gamestate={gameState} />
-          ) : null
-        ) : (
-          <p className='text-lg font-semibold text-orange-500'>
-            Game will start after 3 players join...
-          </p>
+          <WordComponent word={gameState?.word} user={user!} gamestate={gameState} />
+        ) : null}
+
+        {(!gameState || gameState.gameState === 'not-started') && (
+          <div className={`flex items-center justify-center`}>
+            {user?.isAdmin ? (
+              <button
+                className='rounded-full bg-orange-500 px-4 py-2 text-white'
+                onClick={() => {
+                  socket.emit('start-game', { roomId })
+                }}
+              >
+                Start Game
+              </button>
+            ) : (
+              <p className='text-lg font-semibold text-orange-500'>
+                Waiting for admin to start the game!
+              </p>
+            )}
+          </div>
         )}
       </div>
       <LeaveButton />

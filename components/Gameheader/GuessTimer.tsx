@@ -34,7 +34,7 @@ const GuessTimer: FC<{ gamestate: GameStateType; setIscompleted: () => void }> =
     <>
       <div
         id='timer'
-        className='absolute right-[13px] top-[10px] z-[1] text-base font-semibold text-black'
+        className='absolute right-[11px] top-[12px] z-[1] text-sm font-semibold text-black'
       >
         {Timerstatr && <Countdown date={gamestate?.lastGuesstime} renderer={renderer} />}
       </div>
