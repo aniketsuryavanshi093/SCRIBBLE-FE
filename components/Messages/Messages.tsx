@@ -60,23 +60,27 @@ const Messages = () => {
       <div ref={messageListRef} className='messagelist w-full overflow-y-auto'>
         {messages.map((msg, index) => (
           <div key={index} className='mb-2 w-full text-black'>
-            <span className='font-bold'>{msg.username}:</span>
+            <span className='text-sm font-bold'>{msg.username}:</span>
             <span
+              style={{ wordBreak: 'break-word' }}
               className={`${
                 msg.message === gameState?.word! && 'text-green-600'
-              } text-sm font-semibold`}
+              } text-sm font-medium`}
             >
               {msg.message === gameState?.word ? 'Guessed the word!' : msg.message}
             </span>
           </div>
         ))}
       </div>
-      <Input
-        placeholder='Guess word'
-        onKeyDown={handleSubmitMessage}
-        value={message}
-        onChange={handleChange}
-      />
+      <form className='w-full' onSubmit={e => e.preventDefault()}>
+        <Input
+          maxLength={50}
+          placeholder='Guess word'
+          onKeyDown={handleSubmitMessage}
+          value={message}
+          onChange={handleChange}
+        />
+      </form>
     </div>
   )
 }

@@ -51,8 +51,11 @@ export default function useDraw(onDraw: (draw: DrawProps) => void) {
       if (!canvasElement) return
 
       const rect = canvasElement.getBoundingClientRect()
-      const x = clientX - rect.left
-      const y = clientY - rect.top
+      const scaleX = canvasElement.width / rect.width
+      const scaleY = canvasElement.height / rect.height
+
+      const x = (clientX - rect.left - window.scrollX) * scaleX
+      const y = (clientY - rect.top - window.scrollY) * scaleY
 
       return { x, y }
     }

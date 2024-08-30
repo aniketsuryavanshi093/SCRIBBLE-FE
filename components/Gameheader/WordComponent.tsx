@@ -62,7 +62,6 @@ const WordComponent: FC<{ word: string; user: User; gamestate: GameStateType }> 
       socket.off('get-words-indicator')
     }
   }, [])
-  console.log(exposedIndex)
 
   return (
     <div style={{ alignItems: 'unset' }} className='flex justify-center gap-4'>
