@@ -18,7 +18,7 @@ export default function Home() {
   const roomId = nanoid()
 
   return (
-    <div className='bagclass flex h-screen flex-col items-center justify-between pb-5 pt-[10vh]'>
+    <div className='bagclass flex h-screen flex-col items-center justify-between pb-5 pt-[5vh]'>
       <ThemeMenuButton className='fixed right-[5vw] top-5 flex-1 md:right-5' />
 
       <Card className='w-[90vw] max-w-[400px] scale-[.8]'>
