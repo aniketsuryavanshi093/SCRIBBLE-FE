@@ -3,6 +3,7 @@ import { useGameStore } from '@/stores/gameStore'
 import { GameStateType } from '@/types'
 import { useAnimation, motion } from 'framer-motion'
 import { useMembersStore } from '@/stores/membersStore'
+import { useLeaderboardStore } from '@/stores/leaderboardStore'
 import { socket } from '@/lib/socket'
 import { useParams } from 'next/navigation'
 import { User, useUserStore } from '@/stores/userStore'
@@ -14,6 +15,7 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
   const { showPointsTable, setPointsTable } = useGameStore(state => state)
   const { user } = useUserStore(state => state)
   const { members } = useMembersStore(state => state)
+  const { leaderboard } = useLeaderboardStore(state => state)
   const { roomId } = useParams()
 
   const latestGameStateRef = useRef(gameState)
@@ -59,20 +61,22 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
       setPointsTable(false)
     }
   }, [controls, setControls, showPointsTable, socket, user])
+
+  // Top 3 from server-ranked leaderboard, enriched with member data for display
   const winners = useMemo(() => {
-    let winners: User[] = []
-    const temp = members
-      .map(member => {
-        return {
-          ...member,
-          score: gameState?.score[member.id]?.score || 0,
-        }
-      })
-      ?.sort((a, b) => b.score - a.score)
-      .slice(0, 3)
-    winners = [temp[1], temp[0], temp[2]]
-    return winners
-  }, [members, gameState?.score])
+    const top3 = leaderboard.slice(0, 3).map(entry => {
+      const member = members.find(m => m.id === entry.userId)
+      return {
+        id: entry.userId,
+        username: member?.username ?? entry.userId,
+        Avatar: member?.Avatar,
+        score: entry.score,
+      }
+    })
+    // Arrange as [2nd, 1st, 3rd] for the podium display
+    return [top3[1], top3[0], top3[2]]
+  }, [leaderboard, members])
+
   const getImage = (rank: number) => {
     switch (rank) {
       case 1:
@@ -85,6 +89,7 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
         break
     }
   }
+
   return (
     <motion.div
       initial={{ y: '-100%' }}
@@ -107,24 +112,25 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
               </p>
               <div className='flex items-center justify-center gap-7'>
                 {winners?.map((winner, index) => (
-                  <div
-                    key={winner.id}
-                    className={`flex flex-col items-center justify-center ${
-                      index == 1 && 'mb-10'
-                    }`}
-                  >
-                    {getImage(index + 1)}
-                    <AvatarSelector
-                      avatarclassname='pointsavatar'
-                      config={winner.Avatar}
-                      isEditor={false}
-                    />
-                    <p className='text-lg font-extrabold'>{winner?.username}</p>
-                    <p className='text-base font-semibold text-green-800'>
-                      {/* @ts-ignore */}
-                      {winner?.score!}
-                    </p>
-                  </div>
+                  winner && (
+                    <div
+                      key={winner.id}
+                      className={`flex flex-col items-center justify-center ${
+                        index == 1 && 'mb-10'
+                      }`}
+                    >
+                      {getImage(index + 1)}
+                      <AvatarSelector
+                        avatarclassname='pointsavatar'
+                        config={winner.Avatar}
+                        isEditor={false}
+                      />
+                      <p className='text-lg font-extrabold'>{winner?.username}</p>
+                      <p className='text-base font-semibold text-green-800'>
+                        {winner?.score}
+                      </p>
+                    </div>
+                  )
                 ))}
               </div>
             </div>
@@ -133,14 +139,12 @@ const ShowPointsTable: FC<{ gameState: GameStateType }> = ({ gameState }) => {
               <p className='text-xl font-semibold'>The time is up!</p>
               <p className='text-xl font-semibold'>The word was {gameState?.word}</p>
               <div className='flex flex-col items-center justify-center gap-2'>
-                {Object.keys(gameState.score)?.map(elem => (
-                  <div key={elem} className='flex items-center justify-center gap-2'>
+                {leaderboard.map(entry => (
+                  <div key={entry.userId} className='flex items-center justify-center gap-2'>
                     <p className='text-lg font-extrabold'>
-                      {members?.find(el => el.id === elem)?.username}
+                      {members?.find(el => el.id === entry.userId)?.username ?? entry.userId}
                     </p>
-                    <p className='text-lg font-extrabold'>
-                      {gameState?.score[elem]?.score}{' '}
-                    </p>
+                    <p className='text-lg font-extrabold'>{entry.score}</p>
                   </div>
                 ))}
               </div>

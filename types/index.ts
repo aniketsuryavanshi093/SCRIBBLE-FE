@@ -40,3 +40,8 @@ export type Scoretype = Record<
     worddrawoccurance: string
   }
 >
+
+export interface LeaderboardEntry {
+  userId: string
+  score: number
+}
