@@ -30,6 +30,11 @@ const GameStateManager: FC<{ children: ReactNode }> = ({ children }) => {
         setPointsTable(true)
         socket.emit('get-leaderboard', roomId)
       }
+      // Early-end path: server pushes showPointsTable via score update
+      // Re-fetch leaderboard so the round-end overlay has fresh scores
+      if (data?.gameState === 'guessing-word') {
+        socket.emit('get-leaderboard', roomId)
+      }
     })
 
     socket.on('leaderboard-from-server', (data: LeaderboardEntry[]) => {

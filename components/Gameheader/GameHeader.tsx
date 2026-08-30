@@ -18,6 +18,8 @@ const GameHeader = () => {
 
   const setIscompleted = () => {
     setPointsTable(true)
+    // Every client requests the leaderboard so scores are visible in the overlay
+    socket.emit('get-leaderboard', roomId)
     if (gameState?.drawer === user?.id && !isemitref.current) {
       socket.emit('update-scorecard', { roomId })
       isemitref.current = true

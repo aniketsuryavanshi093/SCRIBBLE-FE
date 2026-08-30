@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
 import { socket } from '@/lib/socket'
-import { Button } from '@/components/ui/Button'
+import { useResetAllStores } from '@/hooks/useResetAllStores'
 
 export default function LeaveButton() {
   const router = useRouter()
-
+  const resetAll = useResetAllStores()
   const [isLoading, setIsLoading] = useState(false)
 
   return (
@@ -18,6 +18,7 @@ export default function LeaveButton() {
       onClick={() => {
         setIsLoading(true)
         socket.emit('leave-room')
+        resetAll()
         setTimeout(() => {
           router.replace('/')
         }, 600)

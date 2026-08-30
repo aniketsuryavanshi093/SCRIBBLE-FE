@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { socket } from '@/lib/socket'
+import { useResetAllStores } from '@/hooks/useResetAllStores'
 import {
   Dialog,
   DialogContent,
@@ -14,9 +16,12 @@ import {
 
 const DisconnectedDialog = () => {
   const dialogTriggerRef = useRef<HTMLButtonElement>(null)
+  const router = useRouter()
+  const resetAll = useResetAllStores()
 
   useEffect(() => {
     socket.on('disconnected', () => {
+      resetAll()
       dialogTriggerRef.current?.click()
     })
 
@@ -37,6 +42,13 @@ const DisconnectedDialog = () => {
             a new room or join a room to draw again.
           </DialogDescription>
         </DialogHeader>
+
+        <button
+          className='mt-2 w-full rounded-lg bg-orange-500 px-4 py-2 text-sm font-semibold text-white'
+          onClick={() => router.replace('/')}
+        >
+          Go to Home
+        </button>
       </DialogContent>
     </Dialog>
   )

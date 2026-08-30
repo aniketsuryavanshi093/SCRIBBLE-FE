@@ -27,9 +27,9 @@ const SelectingWords = ({
   const controls = useAnimation()
   const setControls = async () => {
     await controls.start({
-      y: '-100%',
-      display: 'none',
-      transition: { duration: 0.5 },
+      opacity: 0,
+      scale: 0.92,
+      transition: { duration: 0.25 },
     })
   }
   useEffect(() => {
@@ -46,9 +46,9 @@ const SelectingWords = ({
       const sequence = async () => {
         setSelecting(true)
         await controls.start({
-          y: 'calc(100vh - 480px)',
-          transition: { duration: 0.5 },
-          display: 'block',
+          opacity: 1,
+          scale: 1,
+          transition: { duration: 0.35, ease: 'easeOut' },
         })
         // await new Promise(resolve => setTimeout(resolve, 10000))
         // setSelecting(false)
@@ -79,18 +79,18 @@ const SelectingWords = ({
   console.log(words)
   return (
     <motion.div
-      initial={{ y: '-100%' }}
+      initial={{ opacity: 0, scale: 0.92 }}
       animate={controls}
-      className='absolute left-0 right-0 top-0 z-50 flex items-center justify-between gap-5 p-4 text-center text-white'
+      className='absolute inset-0 z-50 flex items-center justify-center pointer-events-none'
     >
       {gameState && selecting ? (
         gameState?.drawer === user?.id ? (
-          <div className='m-auto flex w-[50%] items-center justify-between'>
+          <div className='flex items-center justify-center gap-4 pointer-events-auto'>
             {words?.map(elem => (
               <div
                 key={elem}
                 onClick={() => setSelectedWord(elem)}
-                className='wordselect px-3 py-[6px] text-orange-700'
+                className='wordselect cursor-pointer select-none rounded-lg px-5 py-3 text-base font-bold text-orange-700 transition-transform hover:scale-105 hover:bg-orange-50/10 active:scale-95'
               >
                 {elem}
               </div>
