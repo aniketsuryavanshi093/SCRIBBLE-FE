@@ -8,6 +8,7 @@ interface GameState {
   setgameState: (gamestate: GameStateType) => void
   Timerstatr: boolean
   setTImerstart: (state: boolean) => void
+  reset: () => void
 }
 
 export const useGameStore = create<GameState>(set => ({
@@ -17,4 +18,5 @@ export const useGameStore = create<GameState>(set => ({
   showPointsTable: false,
   setPointsTable: (state: boolean) => set({ showPointsTable: state }),
   setgameState: gameState => set({ gameState }),
+  reset: () => set({ gameState: null, showPointsTable: false, Timerstatr: true }),
 }))

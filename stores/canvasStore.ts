@@ -7,6 +7,7 @@ interface CanvasState {
   setStrokeColor: (strokeColor: string) => void
   setStrokeWidth: (strokeWidth: number[]) => void
   setDashGap: (dashGap: number[]) => void
+  reset: () => void
 }
 
 export const useCanvasStore = create<CanvasState>(set => ({
@@ -16,4 +17,5 @@ export const useCanvasStore = create<CanvasState>(set => ({
   setStrokeColor: strokeColor => set({ strokeColor }),
   setStrokeWidth: strokeWidth => set({ strokeWidth }),
   setDashGap: dashGap => set({ dashGap }),
+  reset: () => set({ strokeColor: '#000', strokeWidth: [3], dashGap: [0] }),
 }))

@@ -31,6 +31,8 @@ export interface GameStateType {
     }
   > | null
   currentRound: number
+  totalRounds: number
+  timePerDraw: number
 }
 
 export type Scoretype = Record<

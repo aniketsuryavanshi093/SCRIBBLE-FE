@@ -133,6 +133,15 @@ export default function DrawingCanvas() {
     }
   }, [clear])
 
+  // Clear canvas immediately when the points table appears (timer expired)
+  const prevShowPointsTable = useRef(false)
+  useEffect(() => {
+    if (showPointsTable && !prevShowPointsTable.current) {
+      clear()
+    }
+    prevShowPointsTable.current = showPointsTable
+  }, [showPointsTable, clear])
+
   console.log('showPointsTable', showPointsTable)
 
   return (

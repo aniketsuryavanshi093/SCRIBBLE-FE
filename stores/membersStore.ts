@@ -4,9 +4,11 @@ import { User } from '@/stores/userStore'
 interface UserState {
   members: User[]
   setMembers: (members: User[]) => void
+  reset: () => void
 }
 
 export const useMembersStore = create<UserState>(set => ({
   members: [],
   setMembers: members => set({ members }),
+  reset: () => set({ members: [] }),
 }))
